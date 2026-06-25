@@ -1,9 +1,11 @@
 package co.edu.udistrital.controller;
 
+import co.edu.udistrital.model.Estudiante;
 import co.edu.udistrital.model.Operaciones;
 import co.edu.udistrital.view.VentanaPrincipal;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JTextField;
 
 public class Controller implements ActionListener{
     private VentanaPrincipal vista;
@@ -22,59 +24,78 @@ public class Controller implements ActionListener{
         vista.getPanelBotones().getBtnModa().addActionListener(this);
         vista.getPanelBotones().getBtnDes().addActionListener(this);
     }
+    
+    public Estudiante[] capturarEstudiantes(){
+        JTextField nombres[]={
+            vista.getPanelEstudiantes().getTxtEst1(),
+            vista.getPanelEstudiantes().getTxtEst2(),
+            vista.getPanelEstudiantes().getTxtEst3(),
+            vista.getPanelEstudiantes().getTxtEst4(),
+            vista.getPanelEstudiantes().getTxtEst5(),
+            vista.getPanelEstudiantes().getTxtEst6(),
+            vista.getPanelEstudiantes().getTxtEst7(),
+            vista.getPanelEstudiantes().getTxtEst8(),
+            vista.getPanelEstudiantes().getTxtEst9(),
+            vista.getPanelEstudiantes().getTxtEst10()
+        };
+        
+        JTextField notas[]={
+            vista.getPanelEstudiantes().getTxtNota1(),
+            vista.getPanelEstudiantes().getTxtNota2(),
+            vista.getPanelEstudiantes().getTxtNota3(),
+            vista.getPanelEstudiantes().getTxtNota4(),
+            vista.getPanelEstudiantes().getTxtNota5(),
+            vista.getPanelEstudiantes().getTxtNota6(),
+            vista.getPanelEstudiantes().getTxtNota7(),
+            vista.getPanelEstudiantes().getTxtNota8(),
+            vista.getPanelEstudiantes().getTxtNota9(),
+            vista.getPanelEstudiantes().getTxtNota10()
+        };
+        
+        Estudiante estudiantes[]=new Estudiante[notas.length];
+        
+        for(int i=0;i<estudiantes.length;i++){
+            String nombre=nombres[i].getText();
+            double nota=Double.parseDouble(notas[i].getText());
+            estudiantes[i]=new Estudiante(nombre, nota);
+        }
+        
+        return estudiantes;
+    }
+    
+    public boolean validarNotas(Estudiante estudiantes[]){
+        boolean valido=true;
+        
+        for(int i=0;i<estudiantes.length;i++){
+            if(estudiantes[i].getNota()<0 || estudiantes[i].getNota()>5){
+                valido=false;
+            }
+        }
+        
+        return valido;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String comando = e.getActionCommand();
         
-        String aux ="";
-        double n1=0;
-        double n2=0;
-        double n3=0;
-        double n4=0;
-        double n5=0;
-        double n6=0;
-        double n7=0;
-        double n8=0;
-        double n9=0;
-        double n10=0;
-        
         try{
-            aux = vista.getPanelEstudiantes().getTxtNota1().getText();
-            n1=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota2().getText();
-            n2=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota3().getText();
-            n3=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota4().getText();
-            n4=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota5().getText();
-            n5=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota6().getText();
-            n6=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota7().getText();
-            n7=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota8().getText();
-            n8=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota9().getText();
-            n9=Double.parseDouble(aux);
-            aux = vista.getPanelEstudiantes().getTxtNota10().getText();
-            n10=Double.parseDouble(aux);
+            Estudiante estudiantes[]=capturarEstudiantes();
             
-            if(n1<0 || n1>5 || n2<0 || n2>5 || n3<0 || n3>5 || n4<0 || n4>5 || n5<0 || n5>5 || n6<0 || n6>5 || n7<0 || n7>5 || n8<0 || n8>5 || n9<0 || n9>5 || n10<0 || n10>5){
+            if(validarNotas(estudiantes)==false){
                 vista.getPanelResultados().getTxtResultados().append("Error: Las notas deben estar entre 0 y 5"+"\n");
             }else{
                 if(comando.equals("PROMEDIO")){
-                    vista.getPanelResultados().getTxtResultados().append("El promedio de las notas de los estudiantes es: "+ operacion.Pormedio(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10)+"\n");
+                    vista.getPanelResultados().getTxtResultados().append("El promedio de las notas de los estudiantes es: "+ operacion.Pormedio(estudiantes)+"\n");
                 }
                 if(comando.equals("APROBADOS")){
-                    vista.getPanelResultados().getTxtResultados().append("La cantidad de estudiantes aprobados es: "+ operacion.Aprobados(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10)+"\n");
+                    vista.getPanelResultados().getTxtResultados().append("La cantidad de estudiantes aprobados es: "+ operacion.Aprobados(estudiantes)+"\n");
                 }
                 if(comando.equals("REPROBADOS")){
-                    vista.getPanelResultados().getTxtResultados().append("La cantidad de estudiantes reprobados es: "+ operacion.Reprobados(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10)+"\n");
+                    vista.getPanelResultados().getTxtResultados().append("La cantidad de estudiantes reprobados es: "+ operacion.Reprobados(estudiantes)+"\n");
                 }
                 if(comando.equals("MODA")){
-                    double moda=operacion.Moda(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10);
+                    double moda=operacion.Moda(estudiantes);
                 
                     if(moda==-1){
                         vista.getPanelResultados().getTxtResultados().append("No hay moda entre las notas de los estudiantes\n");
@@ -83,7 +104,7 @@ public class Controller implements ActionListener{
                     }
                 }
                 if(comando.equals("DES")){
-                    vista.getPanelResultados().getTxtResultados().append("La desviacion estandar de las notas de los estudiantes es: "+ operacion.Desviacion(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10)+"\n");
+                    vista.getPanelResultados().getTxtResultados().append("La desviacion estandar de las notas de los estudiantes es: "+ operacion.Desviacion(estudiantes)+"\n");
                 }
             }
             
