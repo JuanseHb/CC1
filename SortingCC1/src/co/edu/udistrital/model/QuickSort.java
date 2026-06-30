@@ -4,26 +4,34 @@ public class QuickSort {
 
     public void ordenar(int[] arr, int low, int high) {
         if (low < high) {
-            int pi = partition(arr, low, high);
+            int pi = particion(arr, low, high);
 
-            ordenar(arr, low, pi - 1);
+            ordenar(arr, low, pi);
             ordenar(arr, pi + 1, high);
         }
     }
 
-    private int partition(int[] arr, int low, int high) {
-        int pivot = arr[high];
+    private int particion(int[] arr, int low, int high) {
+        int pivot = arr[(low + high) / 2];
+
         int i = low - 1;
+        int j = high + 1;
 
-        for (int j = low; j < high; j++) {
-            if (arr[j] > pivot) { // descendente
+        while (true) {
+
+            do {
                 i++;
-                swap(arr, i, j);
-            }
-        }
+            } while (arr[i] > pivot); // descendente
 
-        swap(arr, i + 1, high);
-        return i + 1;
+            do {
+                j--;
+            } while (arr[j] < pivot);
+
+            if (i >= j)
+                return j;
+
+            swap(arr, i, j);
+        }
     }
 
     private void swap(int[] arr, int a, int b) {
