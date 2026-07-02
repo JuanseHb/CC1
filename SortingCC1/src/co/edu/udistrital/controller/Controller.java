@@ -170,6 +170,52 @@ public class Controller {
     }
 
     /**
+ * Calcula el tiempo promedio de ejecución de un algoritmo
+ * de ordenamiento sobre el mismo arreglo.
+ *
+ * El algoritmo seleccionado se ejecuta tres veces utilizando
+ * exactamente el mismo arreglo de entrada. Cada ejecución es
+ * medida en milisegundos y al final se calcula el promedio
+ * aritmético de los tres tiempos obtenidos.
+ *
+ * Este método se utiliza para obtener una medición más estable
+ * del caso promedio, reduciendo variaciones causadas por
+ * procesos internos del sistema operativo o de la JVM.
+ *
+ *
+ * @param arr Arreglo de enteros sobre el cual se realizarán
+ *            las tres mediciones.
+ * @param algoritmo Nombre del algoritmo a ejecutar.
+ * @return Tiempo promedio de ejecución en milisegundos.
+ */
+private double calcularPromedio(int[] arr, String algoritmo) {
+    double suma = 0;
+
+    for (int i = 0; i < 3; i++) {
+        switch (algoritmo) {
+
+            case "bubble":
+                suma += medirBubble(arr);
+                break;
+
+            case "shell":
+                suma += medirShell(arr);
+                break;
+
+            case "quick":
+                suma += medirQuick(arr);
+                break;
+
+            case "radix":
+                suma += medirRadix(arr);
+                break;
+        }
+    }
+
+    return suma / 3.0;
+}
+
+    /**
      * Ejecuta las pruebas de rendimiento para un tamaño dado.
      *
      * Para cada algoritmo se evalúan:
@@ -185,6 +231,8 @@ public class Controller {
      */
     public void ejecutarPruebas(int n) {
 
+        int[] promedio = CasoGenerador.generarAleatorio(n);
+
         vista.mostrar("=====================================");
         vista.mostrar("PRUEBAS PARA N = " + n);
         vista.mostrar("=====================================");
@@ -193,24 +241,24 @@ public class Controller {
         vista.mostrar("BUBBLE SORT");
         vista.mostrar("Mejor: " + medirBubble(CasoGenerador.mejorBubble(n)) + " ms");
         vista.mostrar("Peor: " + medirBubble(CasoGenerador.peorBubble(n)) + " ms");
-        vista.mostrar("Promedio: " + medirBubble(CasoGenerador.generarAleatorio(n)) + " ms");
+        vista.mostrar("Promedio: " + calcularPromedio(promedio, "bubble") + " ms");
         vista.mostrar("");
 
         vista.mostrar("SHELL SORT");
         vista.mostrar("Mejor: " + medirShell(CasoGenerador.mejorShell(n)) + " ms");
         vista.mostrar("Peor: " + medirShell(CasoGenerador.peorShell(n)) + " ms");
-        vista.mostrar("Promedio: " + medirShell(CasoGenerador.generarAleatorio(n)) + " ms");
+        vista.mostrar("Promedio: " + calcularPromedio(promedio, "shell") + " ms");
         vista.mostrar("");
 
         vista.mostrar("QUICK SORT");
         vista.mostrar("Mejor: " + medirQuick(CasoGenerador.mejorQuick(n)) + " ms");
         vista.mostrar("Peor: " + medirQuick(CasoGenerador.peorQuick(n)) + " ms");
-        vista.mostrar("Promedio: " + medirQuick(CasoGenerador.generarAleatorio(n)) + " ms");
+        vista.mostrar("Promedio: " + calcularPromedio(promedio, "quick") + " ms");
         vista.mostrar("");
 
         vista.mostrar("RADIX SORT");
         vista.mostrar("Mejor: " + medirRadix(CasoGenerador.mejorRadix(n)) + " ms");
         vista.mostrar("Peor: " + medirRadix(CasoGenerador.peorRadix(n)) + " ms");
-        vista.mostrar("Promedio: " + medirRadix(CasoGenerador.generarAleatorio(n)) + " ms");
+        vista.mostrar("Promedio: " + calcularPromedio(promedio, "radix") + " ms");
     }
 }
